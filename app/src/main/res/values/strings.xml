@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">CurrencyConverter</string>
+
+    <!---Error Strings-->
+
+    <string name="error_occured">Произошла ошибка, попробуйте повторить</string>
+    <string name="error_network_error">Проверьте соединение с интернетом</string>
+    <string name="wrong_format">Please use correct format</string>
+
+    <!---View Strings-->
+
+    <string name="enter_currency_from">From</string>
+    <string name="enter_currency_to">To</string>
+    <string name="enter_amount">Enter amount</string>
+    <string name="converted_amount">Converted amount</string>
+    <string name="get_rates">Get rates</string>
+
+</resources>

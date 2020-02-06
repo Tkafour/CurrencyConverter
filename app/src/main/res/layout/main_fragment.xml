@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/from_currency_input"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Custom"
+            android:hint="@string/enter_currency_from"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/to_currency_input"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3">
+
+            <AutoCompleteTextView
+                android:id="@+id/from_currency"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="textCapCharacters" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/to_currency_input"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Custom"
+            android:hint="@string/enter_currency_to"
+            app:layout_constraintBottom_toBottomOf="@+id/from_currency_input"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/from_currency_input"
+            app:layout_constraintTop_toTopOf="@+id/from_currency_input">
+
+            <AutoCompleteTextView
+                android:id="@+id/to_currency"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="textCapCharacters" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <EditText
+            android:id="@+id/from_amount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:hint="@string/enter_amount"
+            android:inputType="number"
+            app:layout_constraintLeft_toLeftOf="@id/from_currency_input"
+            app:layout_constraintRight_toRightOf="@id/from_currency_input"
+            app:layout_constraintTop_toBottomOf="@id/from_currency_input" />
+
+        <TextView
+            android:id="@+id/to_amount"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:hint="@string/converted_amount"
+            android:textSize="18dp"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toBottomOf="@id/from_amount"
+            app:layout_constraintLeft_toLeftOf="@id/to_currency_input"
+            app:layout_constraintRight_toRightOf="@id/to_currency_input"
+            app:layout_constraintTop_toTopOf="@id/from_amount" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@color/colorPrimaryDark"
+            android:text="@string/get_rates"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
