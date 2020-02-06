@@ -6,12 +6,14 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
+import com.artka.currencyconverter.adapter.CurrencyAdapter
 import com.artka.currencyconverter.R
 import com.artka.currencyconverter.base.BaseFragment
+import com.artka.currencyconverter.databinding.CurrencyDialogLayoutBinding
 import com.artka.currencyconverter.databinding.MainFragmentBinding
-import com.artka.currencyconverter.models.Rate
 import com.artka.currencyconverter.utils.snackbar
 import com.artka.currencyconverter.viewmodels.MainViewModel
 import java.lang.Exception
@@ -27,33 +29,17 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java) {
         savedInstanceState: Bundle?
     ): View? {
         binding = MainFragmentBinding.inflate(inflater)
-        binding.apply {
-            button.setOnClickListener {
-                viewModel.getExchangeRates()
-            }
-        }
 
-        viewModel.getRates().observe(this, Observer {
-            setAdapters(it)
+        viewModel.getRates().observe(viewLifecycleOwner, Observer {
             setAmountListener()
             setCurrencyListeners()
         })
 
-        return binding.root
-    }
+        viewModel.getLoadingState().observe(viewLifecycleOwner, Observer {
+            setLoading(it)
+        })
 
-    private fun setAdapters(rates: List<Rate>) {
-        val ratesTest = rates.map { it.name } as MutableList
-        val adapter = ArrayAdapter<String>(
-            activity,
-            android.R.layout.select_dialog_item, ratesTest
-        )
-        binding.apply {
-            toCurrency.threshold = 1
-            fromCurrency.threshold = 1
-            toCurrency.setAdapter(adapter)
-            fromCurrency.setAdapter(adapter)
-        }
+        return binding.root
     }
 
     private fun setCurrencyListeners() {
@@ -78,7 +64,14 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java) {
                 }
             }
             fromCurrency.addTextChangedListener(watcher)
+            fromCurrency.setOnClickListener {
+                showDialog(it as EditText)
+            }
+
             toCurrency.addTextChangedListener(watcher)
+            toCurrency.setOnClickListener {
+                showDialog(it as EditText)
+            }
         }
     }
 
@@ -123,6 +116,28 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java) {
         } else {
             ""
         }
+    }
+
+    private fun showDialog(editTex: EditText) {
+        val builder = AlertDialog.Builder(activity)
+        val binding = CurrencyDialogLayoutBinding.inflate(LayoutInflater.from(activity))
+        builder.setView(binding.root)
+        val dialog = builder.create()
+        binding.apply {
+            val adapter = CurrencyAdapter() {
+                editTex.setText(it.name)
+                dialog.dismiss()
+            }
+            recycler.adapter = adapter
+            adapter.setData(viewModel.getRates().value)
+
+        }
+        dialog.show()
+    }
+
+    private fun setLoading(loadingVisibility: Int) {
+        val visibility = if (loadingVisibility == View.VISIBLE) loadingVisibility else View.GONE
+        binding.progress.visibility = visibility
     }
 
 }

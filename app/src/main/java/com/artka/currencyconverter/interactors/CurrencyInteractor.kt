@@ -24,4 +24,7 @@ class CurrencyInteractor @Inject constructor(
         }
     }
 
+    fun getCachedExchangeRates(): Single<List<Rate>> {
+        return currencyDbRepository.getRates()
+    }
 }
