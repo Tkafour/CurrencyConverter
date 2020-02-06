@@ -7,6 +7,16 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            app:titleTextColor="@android:color/white"
+            app:title="@string/app_name"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/from_currency_input"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Custom"
@@ -16,7 +26,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.3">
+            app:layout_constraintVertical_bias="0.2">
 
             <EditText
                 android:id="@+id/from_currency"
@@ -27,6 +37,15 @@
                 android:layout_height="match_parent" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_forward"
+            app:layout_constraintBottom_toBottomOf="@+id/from_currency_input"
+            app:layout_constraintEnd_toStartOf="@+id/to_currency_input"
+            app:layout_constraintStart_toEndOf="@+id/from_currency_input"
+            app:layout_constraintTop_toTopOf="@+id/from_currency_input" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/to_currency_input"

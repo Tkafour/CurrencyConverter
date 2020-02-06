@@ -12,7 +12,7 @@
     <string name="enter_currency_from">From</string>
     <string name="enter_currency_to">To</string>
     <string name="enter_amount">Enter amount</string>
-    <string name="converted_amount">Converted amount</string>
+    <string name="converted_amount">Final amount</string>
     <string name="get_rates">Get rates</string>
     <string name="select_currency">Select currency</string>
 
