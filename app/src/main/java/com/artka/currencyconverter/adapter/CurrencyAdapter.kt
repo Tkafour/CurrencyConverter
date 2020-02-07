@@ -3,8 +3,8 @@ package com.artka.currencyconverter.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.artka.currencyconverter.database.Rate
 import com.artka.currencyconverter.databinding.CurrencyViewHolderBinding
-import com.artka.currencyconverter.models.Rate
 import com.artka.currencyconverter.utils.ImageUtils
 
 class CurrencyAdapter(private val clickListener: (Rate) -> Unit) :

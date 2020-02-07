@@ -28,14 +28,4 @@ class NetworkReceiver : BroadcastReceiver() {
             NetworkInfo.State.DISCONNECTED
         }
     }
-
-    private fun isConnectedToInternet(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
-        return run {
-            val networkInfo = connectivityManager.activeNetworkInfo
-            networkInfo != null && networkInfo.isConnected
-        }
-    }
 }

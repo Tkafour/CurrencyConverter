@@ -7,8 +7,7 @@ object ImageUtils {
 
     @JvmStatic
     fun getImageId(name : String) : Int {
-        val enumType = Currencies.valueOf(name.toUpperCase())
-        return when (enumType) {
+        return when (findCurrency(name.toUpperCase())) {
             Currencies.CAD -> R.drawable.ic_canada
             Currencies.HKD -> R.drawable.ic_hong_kong
             Currencies.ISK -> R.drawable.ic_iceland
@@ -41,9 +40,14 @@ object ImageUtils {
             Currencies.GBP -> R.drawable.ic_united_kingdom
             Currencies.KRW -> R.drawable.ic_south_korea
             Currencies.MYR -> R.drawable.ic_malaysia
+            Currencies.EUR -> R.drawable.ic_european_union
+            else -> -1
         }
     }
 
+    private fun findCurrency(name : String) : Currencies? {
+        return Currencies.values().find { it.name == name }
+    }
 
     enum class Currencies {
         CAD,
@@ -77,7 +81,8 @@ object ImageUtils {
         ILS,
         GBP,
         KRW,
-        MYR
+        MYR,
+        EUR
     }
 }
 

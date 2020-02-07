@@ -2,108 +2,123 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.Toolbar
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
-            app:titleTextColor="@android:color/white"
-            app:title="@string/app_name"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/from_currency_input"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Custom"
-            android:hint="@string/enter_currency_from"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/to_currency_input"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.2">
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:title="@string/app_name"
+                app:titleTextColor="@android:color/white">
+
+                <ImageView
+                    android:id="@+id/sync"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_marginRight="16dp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_sync" />
+            </androidx.appcompat.widget.Toolbar>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/from_currency_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Custom"
+                android:hint="@string/enter_currency_from"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/to_currency_input"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.2">
+
+                <EditText
+                    android:id="@+id/from_currency"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:inputType="textNoSuggestions" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_forward"
+                app:layout_constraintBottom_toBottomOf="@+id/from_currency_input"
+                app:layout_constraintEnd_toStartOf="@+id/to_currency_input"
+                app:layout_constraintStart_toEndOf="@+id/from_currency_input"
+                app:layout_constraintTop_toTopOf="@+id/from_currency_input" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/to_currency_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Custom"
+                android:hint="@string/enter_currency_to"
+                app:layout_constraintBottom_toBottomOf="@+id/from_currency_input"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/from_currency_input"
+                app:layout_constraintTop_toTopOf="@+id/from_currency_input">
+
+                <EditText
+                    android:id="@+id/to_currency"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:inputType="textNoSuggestions" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <EditText
-                android:id="@+id/from_currency"
-                android:focusable="false"
-                android:clickable="true"
-                android:inputType="textNoSuggestions"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:id="@+id/from_amount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/border"
+                android:digits="0123456789 -."
+                android:hint="@string/enter_amount"
+                android:inputType="numberDecimal"
+                android:padding="8dp"
+                app:layout_constraintLeft_toLeftOf="@id/from_currency_input"
+                app:layout_constraintRight_toRightOf="@id/from_currency_input"
+                app:layout_constraintTop_toBottomOf="@id/from_currency_input" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:id="@+id/to_amount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:gravity="center_vertical"
+                android:hint="@string/converted_amount"
+                android:padding="8dp"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="@id/to_currency_input"
+                app:layout_constraintRight_toRightOf="@id/to_currency_input"
+                app:layout_constraintTop_toTopOf="@id/from_amount" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:src="@drawable/ic_forward"
-            app:layout_constraintBottom_toBottomOf="@+id/from_currency_input"
-            app:layout_constraintEnd_toStartOf="@+id/to_currency_input"
-            app:layout_constraintStart_toEndOf="@+id/from_currency_input"
-            app:layout_constraintTop_toTopOf="@+id/from_currency_input" />
+            <androidx.core.widget.ContentLoadingProgressBar
+                android:id="@+id/progress"
+                style="@android:style/Widget.Material.ProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/to_currency_input"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Custom"
-            android:hint="@string/enter_currency_to"
-            app:layout_constraintBottom_toBottomOf="@+id/from_currency_input"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/from_currency_input"
-            app:layout_constraintTop_toTopOf="@+id/from_currency_input">
-
-            <EditText
-                android:id="@+id/to_currency"
-                android:focusable="false"
-                android:clickable="true"
-                android:inputType="textNoSuggestions"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <EditText
-            android:id="@+id/from_amount"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:hint="@string/enter_amount"
-            android:inputType="number"
-            android:padding="8dp"
-
-            android:background="@drawable/border"
-            app:layout_constraintLeft_toLeftOf="@id/from_currency_input"
-            app:layout_constraintRight_toRightOf="@id/from_currency_input"
-            app:layout_constraintTop_toBottomOf="@id/from_currency_input" />
-
-        <TextView
-            android:id="@+id/to_amount"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:gravity="center_vertical"
-            android:hint="@string/converted_amount"
-            android:textSize="18dp"
-            android:padding="8dp"
-            android:textColor="@android:color/black"
-            android:background="@drawable/border"
-            app:layout_constraintBottom_toBottomOf="@id/from_amount"
-            app:layout_constraintLeft_toLeftOf="@id/to_currency_input"
-            app:layout_constraintRight_toRightOf="@id/to_currency_input"
-            app:layout_constraintTop_toTopOf="@id/from_amount" />
-
-        <ProgressBar
-            android:id="@+id/progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

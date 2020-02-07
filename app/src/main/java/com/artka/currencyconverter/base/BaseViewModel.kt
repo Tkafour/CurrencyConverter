@@ -12,7 +12,7 @@ abstract class BaseViewModel : ViewModel() {
 
     protected var errorLiveData : MutableLiveData<Throwable> = MutableLiveData()
 
-    private var errorMessageLiveData : MutableLiveData<String> = MutableLiveData()
+    protected var errorMessageLiveData : MutableLiveData<Int> = MutableLiveData()
 
     protected val compositeDisposable = CompositeDisposable()
 
@@ -24,14 +24,6 @@ abstract class BaseViewModel : ViewModel() {
         loadingVisibility.postValue(View.GONE)
     }
 
-    protected fun processError(t : Throwable) {
-        errorLiveData.postValue(t)
-    }
-
-    protected fun processErrorMessage(message : String) {
-        errorMessageLiveData.postValue(message)
-    }
-
     fun getLoadingState() : LiveData<Int> {
         return loadingVisibility
     }
@@ -40,7 +32,7 @@ abstract class BaseViewModel : ViewModel() {
         return errorLiveData
     }
 
-    fun getErrorMessageData() : LiveData<String> {
+    fun getErrorMessageData() : LiveData<Int> {
         return errorMessageLiveData
     }
 

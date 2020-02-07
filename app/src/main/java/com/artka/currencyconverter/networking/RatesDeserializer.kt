@@ -1,8 +1,7 @@
 package com.artka.currencyconverter.networking
 
+import com.artka.currencyconverter.database.Rate
 import com.artka.currencyconverter.models.CurrencyListModel
-import com.artka.currencyconverter.models.Rate
-import com.artka.currencyconverter.models.Rates
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -16,6 +15,10 @@ class RatesDeserializer : JsonDeserializer<CurrencyListModel> {
         context: JsonDeserializationContext?
     ): CurrencyListModel {
         val jsonObject = json?.asJsonObject
+
+        val base = jsonObject?.get("base")?.asString ?: ""
+        val date = jsonObject?.get("date")?.asString
+
         val ratesObject = jsonObject?.get("rates") as? JsonObject
         val keys = ratesObject?.keySet()?.toList()
         val rates = mutableListOf<Rate>()
@@ -25,9 +28,10 @@ class RatesDeserializer : JsonDeserializer<CurrencyListModel> {
             rates.add(rate)
         }
 
-        val base = jsonObject?.get("base")?.asString
-        val date = jsonObject?.get("date")?.asString
+        val baseCurrency = Rate(name = base, rate = 1.0)
 
-        return CurrencyListModel(base = base, date = date, rates = Rates(rates))
+        rates.add(baseCurrency)
+
+        return CurrencyListModel(base = base, date = date, rates = rates)
     }
 }

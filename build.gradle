@@ -2,12 +2,13 @@
 
 buildscript {
     ext.kotlin_version = '1.3.50'
-    ext.dagger2_version = '2.16'
+    ext.dagger2_version = '2.26'
     ext.retrofit_version = '2.4.0'
     ext.support_version = '28.0.0'
-    ext.navigation_version = '2.2.0'
-    ext.lifecycle_version = '2.1.0'
+    ext.navigation_version = '2.2.1'
+    ext.lifecycle_version = '2.2.0'
     ext.room_version = '2.2.3'
+    ext.inputMask_version = "5.0.0"
 
 
     repositories {

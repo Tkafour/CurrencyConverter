@@ -1,5 +1,6 @@
 package com.artka.currencyconverter.di.modules
 
+import androidx.room.Room
 import com.artka.currencyconverter.app.App
 import com.artka.currencyconverter.database.CurrencyDb
 import com.artka.currencyconverter.database.CurrencyDbRepository
@@ -11,17 +12,22 @@ import javax.inject.Singleton
 @Suppress("unused")
 object RoomModule {
 
-    @Singleton
-    @Provides
     @JvmStatic
-    internal fun provideCurrencyDbRepository() : CurrencyDbRepository {
+    @Provides
+    @Singleton
+    internal fun provideCurrencyDbRepository(): CurrencyDbRepository {
         return CurrencyDbRepository(provideRoom().currencyDao())
     }
 
-    @Singleton
-    @Provides
     @JvmStatic
-    internal fun provideRoom() : CurrencyDb {
-        return CurrencyDb.getInstance(App.applicationContext())!!
+    @Provides
+    @Singleton
+    internal fun provideRoom(): CurrencyDb {
+        return Room.databaseBuilder(
+            App.applicationContext(),
+            CurrencyDb::class.java,
+            "currency_converter.db"
+        )
+            .build()
     }
 }

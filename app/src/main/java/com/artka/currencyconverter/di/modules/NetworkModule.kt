@@ -20,16 +20,16 @@ import java.util.concurrent.TimeUnit
 @Module
 object NetworkModule {
 
-    @Reusable
-    @Provides
     @JvmStatic
-    internal fun provideHelpDeskApi(retrofit: Retrofit): CurrencyApi {
+    @Provides
+    @Reusable
+    internal fun provideCurrencyApi(retrofit: Retrofit): CurrencyApi {
         return retrofit.create(CurrencyApi::class.java)
     }
 
+    @JvmStatic
     @Provides
     @Reusable
-    @JvmStatic
     internal fun provideRetrofitInterface(): Retrofit {
 
         val rateDeserializer = RatesDeserializer()
@@ -47,9 +47,9 @@ object NetworkModule {
             .build()
     }
 
+    @JvmStatic
     @Provides
     @Reusable
-    @JvmStatic
     internal fun createOkHttpClient(): OkHttpClient {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
         httpLoggingInterceptor.level =

@@ -1,27 +1,31 @@
 package com.artka.currencyconverter.fragments
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
-import com.artka.currencyconverter.adapter.CurrencyAdapter
 import com.artka.currencyconverter.R
+import com.artka.currencyconverter.adapter.CurrencyAdapter
 import com.artka.currencyconverter.base.BaseFragment
 import com.artka.currencyconverter.databinding.CurrencyDialogLayoutBinding
 import com.artka.currencyconverter.databinding.MainFragmentBinding
+import com.artka.currencyconverter.utils.AnimUtils
+import com.artka.currencyconverter.utils.NetworkUtils
 import com.artka.currencyconverter.utils.snackbar
 import com.artka.currencyconverter.viewmodels.MainViewModel
-import java.lang.Exception
-import java.text.DecimalFormat
+import io.reactivex.disposables.Disposable
+
+const val ACRONYM_SIZE = 3
 
 class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java) {
 
     private lateinit var binding: MainFragmentBinding
+
+    private var subscription: Disposable? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,6 +39,15 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java) {
             setCurrencyListeners()
         })
 
+        binding.sync.setOnClickListener {
+            if (!NetworkUtils.isNetworkAvailable()) {
+                view?.snackbar(R.string.error_network_error)
+            } else {
+                AnimUtils.rotate(it)
+            }
+            viewModel.getData()
+        }
+
         viewModel.getLoadingState().observe(viewLifecycleOwner, Observer {
             setLoading(it)
         })
@@ -44,31 +57,24 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java) {
 
     private fun setCurrencyListeners() {
         binding.apply {
-            val watcher = object : TextWatcher {
-                override fun afterTextChanged(s: Editable?) {
-                    if (fromCurrency.text?.length == 3 && toCurrency.text?.length == 3) {
-                        val amount = fromAmount.text.toString().toDoubleOrNull()
-                        toAmount.text = calculateAmount(amount)
-                    }
-                }
 
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            val watcher = {
+                if (fromCurrency.text?.length == ACRONYM_SIZE && toCurrency.text?.length == ACRONYM_SIZE) {
+                    val amount = fromAmount.text.toString().toDoubleOrNull()
+                    checkAmount(amount)
                 }
             }
-            fromCurrency.addTextChangedListener(watcher)
+
+            fromCurrency.addTextChangedListener {
+                watcher()
+            }
             fromCurrency.setOnClickListener {
                 showDialog(it as EditText)
             }
 
-            toCurrency.addTextChangedListener(watcher)
+            toCurrency.addTextChangedListener {
+                watcher()
+            }
             toCurrency.setOnClickListener {
                 showDialog(it as EditText)
             }
@@ -76,46 +82,31 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java) {
     }
 
     private fun setAmountListener() {
-        binding.apply {
-            val textWatcher = object : TextWatcher {
-                override fun afterTextChanged(s: Editable?) {
-                }
+        binding.fromAmount.addTextChangedListener {
+            val amount = it.toString().toDoubleOrNull()
+            checkAmount(amount)
+        }
 
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
+    }
 
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    try {
-                        val amount = s.toString().toDoubleOrNull()
-                        toAmount.text = calculateAmount(amount)
-                    } catch (e: Exception) {
-                        view?.snackbar(R.string.wrong_format)
-                    }
-                }
-            }
-            fromAmount.addTextChangedListener(textWatcher)
+    private fun checkAmount(amount: Double?) {
+        if (amount != null) {
+            calculateAmount(amount)
+        } else {
+            binding.toAmount.text = ""
         }
     }
 
     private fun calculateAmount(
-        amount: Double?
-    ): String {
-        return if (amount != null) {
-            val firstCurrency = binding.fromCurrency.text.toString()
-            val secondCurrency = binding.toCurrency.text.toString()
-            val rates = viewModel.getRates().value
-            val firstRate = rates?.find { it.name == firstCurrency }?.rate ?: 1.0
-            val secondRate = rates?.find { it.name == secondCurrency }?.rate ?: 1.0
-            val df = DecimalFormat("###.#")
-            df.format(amount * (secondRate / firstRate))
-        } else {
-            ""
-        }
+        amount: Double
+    ) {
+        val firstCurrency = binding.fromCurrency.text.toString()
+        val secondCurrency = binding.toCurrency.text.toString()
+        subscription?.dispose()
+        subscription = viewModel.calculateAmount(firstCurrency, secondCurrency, amount).subscribe({
+            binding.toAmount.text = it
+        }, { it.printStackTrace() })
+        subscription?.let { compositeDisposable.add(it) }
     }
 
     private fun showDialog(editTex: EditText) {
@@ -124,12 +115,12 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java) {
         builder.setView(binding.root)
         val dialog = builder.create()
         binding.apply {
-            val adapter = CurrencyAdapter() {
+            val adapter = CurrencyAdapter {
                 editTex.setText(it.name)
                 dialog.dismiss()
             }
             recycler.adapter = adapter
-            adapter.setData(viewModel.getRates().value)
+            adapter.setData(viewModel.getRates().value?.sortedBy { it.name })
 
         }
         dialog.show()

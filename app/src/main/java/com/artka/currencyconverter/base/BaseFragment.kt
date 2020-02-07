@@ -8,6 +8,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.artka.currencyconverter.R
 import com.artka.currencyconverter.utils.NetworkUtils
@@ -23,12 +24,12 @@ abstract class BaseFragment<VM : BaseViewModel>(private val clazz: Class<VM>) : 
     protected lateinit var activity: AppCompatActivity
 
     protected val viewModel: VM by lazy {
-        ViewModelProviders.of(activity, ViewModelFactory()).get(clazz)
+        ViewModelProvider(activity, ViewModelFactory()).get(clazz)
     }
 
     private var networkSubscription: Disposable? = null
 
-    private var compositeDisposable = CompositeDisposable()
+    protected var compositeDisposable = CompositeDisposable()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +77,7 @@ abstract class BaseFragment<VM : BaseViewModel>(private val clazz: Class<VM>) : 
     private fun processError(t: Throwable) {
         if (t is UnknownHostException) {
             val isNetworkAvailable = NetworkUtils.isNetworkAvailable()
-            if (isNetworkAvailable) {
+            if (!isNetworkAvailable) {
                 view?.snackbar(R.string.error_network_error)
             } else {
                 view?.snackbar(R.string.error_occured)
@@ -86,14 +87,8 @@ abstract class BaseFragment<VM : BaseViewModel>(private val clazz: Class<VM>) : 
         }
     }
 
-    private fun processErrorMessage(message: String) {
-        when {
-            message.isEmpty() -> {
-            }
-            else -> {
-                view?.snackbar(message)
-            }
-        }
+    private fun processErrorMessage(message: Int) {
+        view?.snackbar(message)
     }
 
     open fun setPlaceholderVisibility(visibility: Int) {}
