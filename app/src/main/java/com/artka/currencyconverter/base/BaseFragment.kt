@@ -1,22 +1,17 @@
 package com.artka.currencyconverter.base
 
 import android.app.Activity
-import android.net.NetworkInfo
 import android.os.Bundle
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.artka.currencyconverter.R
 import com.artka.currencyconverter.utils.NetworkUtils
 import com.artka.currencyconverter.utils.snackbar
 import com.artka.currencyconverter.viewmodels.ViewModelFactory
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import java.net.UnknownHostException
 
 abstract class BaseFragment<VM : BaseViewModel>(private val clazz: Class<VM>) : Fragment() {
@@ -26,8 +21,6 @@ abstract class BaseFragment<VM : BaseViewModel>(private val clazz: Class<VM>) : 
     protected val viewModel: VM by lazy {
         ViewModelProvider(activity, ViewModelFactory()).get(clazz)
     }
-
-    private var networkSubscription: Disposable? = null
 
     protected var compositeDisposable = CompositeDisposable()
 
@@ -41,18 +34,6 @@ abstract class BaseFragment<VM : BaseViewModel>(private val clazz: Class<VM>) : 
         viewModel.getErrorMessageData().observe(this, Observer {
             processErrorMessage(it)
         })
-
-        networkSubscription?.dispose()
-
-        networkSubscription =
-            NetworkUtils.networkStateSubject.observeOn(AndroidSchedulers.mainThread()).subscribe {
-                if (it == NetworkInfo.State.DISCONNECTED) {
-                    setPlaceholderVisibility(View.VISIBLE)
-                } else {
-                    setPlaceholderVisibility(View.GONE)
-                }
-            }
-        compositeDisposable.addAll(networkSubscription)
     }
 
     override fun onPause() {
@@ -90,6 +71,4 @@ abstract class BaseFragment<VM : BaseViewModel>(private val clazz: Class<VM>) : 
     private fun processErrorMessage(message: Int) {
         view?.snackbar(message)
     }
-
-    open fun setPlaceholderVisibility(visibility: Int) {}
 }

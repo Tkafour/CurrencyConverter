@@ -110,20 +110,24 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java) {
     }
 
     private fun showDialog(editTex: EditText) {
-        val builder = AlertDialog.Builder(activity)
-        val binding = CurrencyDialogLayoutBinding.inflate(LayoutInflater.from(activity))
-        builder.setView(binding.root)
-        val dialog = builder.create()
-        binding.apply {
-            val adapter = CurrencyAdapter {
-                editTex.setText(it.name)
-                dialog.dismiss()
+        val rates = viewModel.getRates().value?.sortedBy { it.name }
+        if (rates.isNullOrEmpty()) {
+            view?.snackbar(R.string.please_download_rates)
+        } else {
+            val builder = AlertDialog.Builder(activity)
+            val binding = CurrencyDialogLayoutBinding.inflate(LayoutInflater.from(activity))
+            builder.setView(binding.root)
+            val dialog = builder.create()
+            binding.apply {
+                val adapter = CurrencyAdapter {
+                    editTex.setText(it.name)
+                    dialog.dismiss()
+                }
+                recycler.adapter = adapter
+                adapter.setData(rates)
             }
-            recycler.adapter = adapter
-            adapter.setData(viewModel.getRates().value?.sortedBy { it.name })
-
+            dialog.show()
         }
-        dialog.show()
     }
 
     private fun setLoading(loadingVisibility: Int) {

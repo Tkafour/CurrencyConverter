@@ -3,8 +3,8 @@
 
     <!---Error Strings-->
 
-    <string name="error_occured">Произошла ошибка, попробуйте повторить</string>
-    <string name="error_network_error">Проверьте соединение с интернетом</string>
+    <string name="error_occured">An error has occurred, please try again later</string>
+    <string name="error_network_error">Please check your internet connection</string>
     <string name="wrong_format">Please use correct format</string>
 
     <!---View Strings-->
@@ -15,5 +15,6 @@
     <string name="converted_amount">Final amount</string>
     <string name="get_rates">Get rates</string>
     <string name="select_currency">Select currency</string>
+    <string name="please_download_rates">Please check your internet connection and download rates</string>
 
 </resources>
